@@ -160,6 +160,12 @@ You can customize various aspects of the installation:
 
 **Powered by** OpenAI (GPT-4, TTS-1) • p5.js
 
+## 🌐 Live App
+
+**Experience the installation:** [https://machine-forgetting-textvoice.vercel.app/](https://machine-forgetting-textvoice.vercel.app/)
+
+The live application is hosted and ready to use. Simply visit the link above to start exploring computational forgetting through interactive drawing with AI-generated text.
+
 ## License
 
 MIT License
