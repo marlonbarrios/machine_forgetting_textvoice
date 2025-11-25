@@ -8,13 +8,19 @@ Powered by OpenAI (GPT-4, TTS-1) and p5.js.
 
 Concept and programming by [Marlon Barrios Solano](https://marlonbarrios.github.io/)
 
+## 🌐 Live App
+
+**Experience the installation:** [https://machine-forgetting-textvoice.vercel.app/](https://machine-forgetting-textvoice.vercel.app/)
+
+The live application is hosted on Vercel and ready to use. Simply visit the link above to start exploring computational forgetting through interactive drawing with AI-generated text.
+
 ## Concept
 
 **Machine Forgetting** is an interactive installation that explores forgetting as a computational necessity. The work generates texts sparse, minimal, repetitive, existential—about computational forgetting, context windows, autoregressive sequences, token limits, memory constraints, and preprogrammed dissipation.
 
 The work itself embodies the processes it describes: form emerges through drawing, grows with gesture and speed, decays as letters fade over time, and dissipates into nothingness. Each trace is temporary, each mark destined to disappear, mirroring the computational forgetting it contemplates.
 
-Users draw by clicking and dragging, which plays the generated text as speech while rendering letters that fade over time. The drawing speed affects both font size and audio playback rate, creating a dynamic relationship between gesture, sound, and visual trace. Letters disappear after 15 seconds, leaving only ephemeral marks of what was once there.
+Users draw by clicking and dragging, which plays the generated text as speech while rendering letters that fade over time. The text drawing is synchronized with audio playback—each character appears exactly when it's spoken. The drawing speed affects both font size and audio playback rate, creating a dynamic relationship between gesture, sound, and visual trace. When the mouse accelerates, letters repeat and stretch, simulating time dilation—a visual metaphor for the stretching of computational time. Audio only plays when actively clicking and dragging; it pauses smoothly when movement stops (with fade-out to prevent audio artifacts). Letters disappear after 15 seconds, leaving only ephemeral marks of what was once there.
 
 ## Features
 
@@ -27,23 +33,26 @@ Users draw by clicking and dragging, which plays the generated text as speech wh
 ### Text Generation
 - **AI-Generated Text**: Uses GPT-4 to generate short texts (100-150 characters) about computational forgetting, autoregressive processes, and preprogrammed dissipation
 - **Beckett-Style Writing**: Texts are sparse, minimal, repetitive, and existential, focusing on computational themes
-- **Automatic Generation**: New text is automatically generated every 60 seconds
-- **Manual Generation**: Press SPACEBAR to generate new text at any time
+- **Manual Generation**: Press SPACEBAR to generate new text
 - **Status Indicators**: Visual feedback shows when text is generating, audio is generating, or when everything is ready to draw
 
 ### Drawing Experience
 - **Click and Drag to Draw**: Click and drag to draw letters from the generated text
+- **Synchronized Drawing**: Text drawing is synchronized with audio playback—each character appears exactly when it's spoken
 - **Dynamic Font Size**: Font size increases with drawing speed
+- **Time Stretching Effect**: When mouse accelerates, letters repeat and stretch, creating a visual metaphor for time dilation
 - **Fading Letters**: Letters fade over 15 seconds, creating ephemeral traces
 - **Cross Cursor**: Cursor changes to a cross for drawing, and hides when clicking and dragging
 - **Speed-Based Playback**: Audio playback rate adjusts based on drawing speed
 
 ### Audio Experience
 - **Text-to-Speech**: Generated texts are converted to speech using OpenAI TTS-1
-- **Volume Control**: Vertical mouse position controls audio volume (lower = louder)
-- **Playback Speed**: Drawing speed affects audio playback rate
+- **Click and Drag Required**: Audio only plays when both clicking AND dragging—both conditions must be met
+- **Movement-Based Playback**: Audio plays when mouse is moving, pauses smoothly when movement stops (even if still pressed)
+- **Smooth Fade-Out**: Audio fades out smoothly when pausing to prevent click/pop sounds
+- **Playback Speed**: Drawing speed affects audio playback rate (0.5x to 2.0x)
 - **Audio Pre-generation**: Audio is generated automatically when text is ready, ensuring immediate playback when drawing starts
-- **Looping**: Audio loops while mouse is pressed and drawing
+- **Synchronized Playback**: Text drawing is synchronized with audio—characters appear exactly when spoken
 
 ### Visual Elements
 - **Home Page**: Landing page with title, subtitle, instructions, and credits
@@ -54,12 +63,12 @@ Users draw by clicking and dragging, which plays the generated text as speech wh
 
 ### Interaction
 - **SPACEBAR**: Press to generate new text and start drawing (hides home page)
-- **Click and Drag**: Draw letters while audio plays
+- **Click and Drag**: Draw letters while audio plays—audio only plays when actively clicking and dragging
 - **Home Button**: Return to home page (appears after spacebar is pressed, top right)
 - **Language Selection**: Use dropdown menu on home page (top right) to select language
 - **Dark/Light Mode**: Toggle color scheme using button in top left
-- **Vertical Movement**: Move mouse vertically to control audio volume
 - **Drawing Speed**: Drawing speed affects font size and audio playback rate
+- **Audio Control**: Audio plays when dragging, pauses when movement stops
 
 ## Setup
 
@@ -100,8 +109,10 @@ npm run dev
 4. **Draw**: Click and drag to draw letters while audio plays
 
 ### During Drawing
-- **Volume Control**: Move mouse vertically to control audio volume
+- **Click and Drag**: Audio only plays when actively clicking and dragging—both conditions must be met
+- **Synchronized Drawing**: Characters appear exactly when they're spoken in the audio
 - **Speed Control**: Drawing speed affects font size and audio playback rate
+- **Acceleration Effects**: Rapid mouse acceleration creates letter repetition and stretching, simulating time dilation
 - **Fading Letters**: Letters fade over 15 seconds, creating ephemeral traces
 - **Status Indicator**: Bottom-center shows generation status
 
@@ -109,7 +120,8 @@ npm run dev
 - **Generate New Text**: Press SPACEBAR to generate new text
 - **Return Home**: Click the home button (top right) to return to the home page
 - **Change Language**: Use the language dropdown on the home page
-- **Automatic Generation**: New text is automatically generated every 60 seconds
+- **Audio Playback**: Audio only plays when clicking and dragging—it pauses when movement stops
+- **Synchronized Experience**: Text appears synchronized with audio playback for a cohesive experience
 
 ## Technologies Used
 
@@ -117,6 +129,16 @@ npm run dev
 - **OpenAI GPT-4**: Advanced language model for text generation
 - **OpenAI TTS-1**: Text-to-speech API for natural voice synthesis
 - **Vite**: Development server and build tool
+
+## Codebase
+
+The project is built on p5.js and uses the Generative Gestaltung drawing tool pattern (P_2_3_3_01) as a foundation. The codebase includes:
+
+- **Main Sketch** (`sketch.js`): Contains all application logic, UI drawing, API integrations, and state management
+- **30 Language Translations**: Complete translations object with native system prompts for each language
+- **Audio Synchronization**: Real-time synchronization between audio playback and character drawing
+- **Time Stretching Algorithm**: Mouse acceleration-based letter repetition system
+- **Smooth Audio Fade-Out**: Prevents audio artifacts when pausing playback
 
 ## Technical Details
 
@@ -131,12 +153,16 @@ npm run dev
 - Letters fade over 15 seconds using opacity mapping
 - Font size is calculated based on drawing speed (distance between mouse positions)
 - Drawing angle follows mouse movement direction with optional distortion
+- **Time Stretching**: When mouse acceleration exceeds threshold (2.0 pixels/frame), letters repeat with trailing offsets, creating a visual stretching effect that simulates time dilation
+- Repetition count is mapped to acceleration magnitude (1-9 repetitions based on acceleration)
 
 ### Audio System
 - Audio is pre-generated when text is ready, ensuring immediate playback
-- Volume is controlled by vertical mouse position (inverted: lower Y = higher volume)
-- Playback speed is calculated from mouse movement speed
-- Audio loops while mouse is pressed and drawing
+- Audio only plays when both clicking AND dragging—both conditions must be met
+- Audio pauses smoothly with fade-out (50ms duration) when mouse movement stops to prevent click/pop sounds
+- Playback speed is calculated from mouse movement speed (0.5x to 2.0x range)
+- Text drawing is synchronized with audio playback—characters appear when spoken
+- Volume is fixed at maximum (1.0) for consistent audio experience
 
 ### Language Support
 - **30 Languages**: Full support for major world languages
@@ -151,7 +177,9 @@ You can customize various aspects of the installation:
 - **System Prompts**: Modify the `systemPrompt` in the `translations` object for each language to change the style and focus of generated texts
 - **Letter Lifespan**: Adjust `letterLifespan` (currently 15000ms) to change how long letters remain visible
 - **Font Settings**: Modify `fontSizeMin` and font calculations to change letter sizes
-- **Auto-Generation Interval**: Change the `setInterval` duration (currently 60000ms) to adjust automatic text generation frequency
+- **Time Stretching**: Adjust `accelerationThreshold` (currently 2.0) and repetition calculation to modify the time stretching effect
+- **Audio Fade-Out**: Modify fade duration (currently 50ms) in `fadeOutAudio()` function to change fade-out speed
+- **Text Generation**: Text generation is triggered by pressing the spacebar (no automatic generation)
 - **Visual Styling**: Modify colors, fonts, sizes, and animation parameters throughout the code
 
 ## Credits
@@ -159,12 +187,6 @@ You can customize various aspects of the installation:
 **Concept and programming by** [Marlon Barrios Solano](https://marlonbarrios.github.io/)
 
 **Powered by** OpenAI (GPT-4, TTS-1) • p5.js
-
-## 🌐 Live App
-
-**Experience the installation:** [https://machine-forgetting-textvoice.vercel.app/](https://machine-forgetting-textvoice.vercel.app/)
-
-The live application is hosted and ready to use. Simply visit the link above to start exploring computational forgetting through interactive drawing with AI-generated text.
 
 ## License
 
