@@ -837,15 +837,18 @@ const sketch = p => {
     const creditText1 = 'Concept and programming by ';
     const nameText = 'Marlon Barrios Solano';
     const creditText2 = ' • Powered by OpenAI (GPT-4, TTS-1) • p5.js';
+    const repoText = ' • Repository';
     
-    // Calculate positions for centered text with clickable name
+    // Calculate positions for centered text with clickable name and repo
     const creditWidth1 = p.textWidth(creditText1);
     const nameWidth = p.textWidth(nameText);
     const creditWidth2 = p.textWidth(creditText2);
-    const totalWidth = creditWidth1 + nameWidth + creditWidth2;
+    const repoWidth = p.textWidth(repoText);
+    const totalWidth = creditWidth1 + nameWidth + creditWidth2 + repoWidth;
     
     const startX = centerX - totalWidth / 2;
     const nameX = startX + creditWidth1;
+    const repoX = nameX + nameWidth + creditWidth2;
     const nameY = creditsY - 15;
     
     // Draw first part of credits
@@ -853,22 +856,32 @@ const sketch = p => {
     p.text(creditText1, startX, nameY);
     
     // Portfolio link on name (clickable)
-    const linkLeft = nameX;
-    const linkRight = nameX + nameWidth;
-    const linkTop = nameY - 8;
-    const linkBottom = nameY + 8;
+    const nameLinkLeft = nameX;
+    const nameLinkRight = nameX + nameWidth;
+    const nameLinkTop = nameY - 8;
+    const nameLinkBottom = nameY + 8;
+    
+    // Repository link (clickable)
+    const repoLinkLeft = repoX;
+    const repoLinkRight = repoX + repoWidth;
+    const repoLinkTop = nameY - 8;
+    const repoLinkBottom = nameY + 8;
     
     // Check if mouse is hovering over name link
-    const isHovering = p.mouseX >= linkLeft && p.mouseX <= linkRight &&
-                       p.mouseY >= linkTop && p.mouseY <= linkBottom;
+    const isHoveringName = p.mouseX >= nameLinkLeft && p.mouseX <= nameLinkRight &&
+                           p.mouseY >= nameLinkTop && p.mouseY <= nameLinkBottom;
     
-    // Change cursor to pointer when hovering
-    if (isHovering && showHomePage && !hasStartedDrawing) {
+    // Check if mouse is hovering over repo link
+    const isHoveringRepo = p.mouseX >= repoLinkLeft && p.mouseX <= repoLinkRight &&
+                           p.mouseY >= repoLinkTop && p.mouseY <= repoLinkBottom;
+    
+    // Change cursor to pointer when hovering over links
+    if ((isHoveringName || isHoveringRepo) && showHomePage && !hasStartedDrawing) {
       p.cursor(p.HAND);
     }
     
     // Draw name with underline and different color when hovering
-    if (isHovering) {
+    if (isHoveringName) {
       p.fill(textColor - 60); // Lighter when hovering
     } else {
       p.fill(textColor - 100);
@@ -876,43 +889,77 @@ const sketch = p => {
     p.text(nameText, nameX, nameY);
     
     // Draw underline on name
-    p.stroke(isHovering ? textColor - 60 : textColor - 100);
+    p.stroke(isHoveringName ? textColor - 60 : textColor - 100);
     p.strokeWeight(1);
-    p.line(linkLeft, nameY + 2, linkRight, nameY + 2);
+    p.line(nameLinkLeft, nameY + 2, nameLinkRight, nameY + 2);
     p.noStroke();
     
     // Draw second part of credits
     p.fill(textColor - 100);
     p.text(creditText2, nameX + nameWidth, nameY);
     
+    // Draw repository link with underline and different color when hovering
+    if (isHoveringRepo) {
+      p.fill(textColor - 60); // Lighter when hovering
+    } else {
+      p.fill(textColor - 100);
+    }
+    p.text(repoText, repoX, nameY);
+    
+    // Draw underline on repo link
+    p.stroke(isHoveringRepo ? textColor - 60 : textColor - 100);
+    p.strokeWeight(1);
+    p.line(repoLinkLeft, nameY + 2, repoLinkRight, nameY + 2);
+    p.noStroke();
+    
     p.pop();
   }
 
   p.mousePressed = function() {
-    // Check if clicking on portfolio link (Marlon's name) (only on home page)
+    // Check if clicking on portfolio link (Marlon's name) or repository link (only on home page)
     if (showHomePage && !hasStartedDrawing) {
       const centerX = p.width / 2;
       const creditsY = p.height - 20;
       const nameY = creditsY - 15;
       const nameText = 'Marlon Barrios Solano';
       const creditText1 = 'Concept and programming by ';
+      const creditText2 = ' • Powered by OpenAI (GPT-4, TTS-1) • p5.js';
+      const repoText = ' • Repository';
       
       p.textSize(11);
       const creditWidth1 = p.textWidth(creditText1);
       const nameWidth = p.textWidth(nameText);
-      const creditWidth2 = p.textWidth(' • Powered by OpenAI (GPT-4, TTS-1) • p5.js');
-      const totalWidth = creditWidth1 + nameWidth + creditWidth2;
+      const creditWidth2 = p.textWidth(creditText2);
+      const repoWidth = p.textWidth(repoText);
+      const totalWidth = creditWidth1 + nameWidth + creditWidth2 + repoWidth;
       
       const startX = centerX - totalWidth / 2;
       const nameX = startX + creditWidth1;
-      const linkLeft = nameX;
-      const linkRight = nameX + nameWidth;
-      const linkTop = nameY - 8;
-      const linkBottom = nameY + 8;
+      const repoX = nameX + nameWidth + creditWidth2;
       
-      if (p.mouseX >= linkLeft && p.mouseX <= linkRight &&
-          p.mouseY >= linkTop && p.mouseY <= linkBottom) {
+      // Name link bounds
+      const nameLinkLeft = nameX;
+      const nameLinkRight = nameX + nameWidth;
+      const nameLinkTop = nameY - 8;
+      const nameLinkBottom = nameY + 8;
+      
+      // Repository link bounds
+      const repoLinkLeft = repoX;
+      const repoLinkRight = repoX + repoWidth;
+      const repoLinkTop = nameY - 8;
+      const repoLinkBottom = nameY + 8;
+      
+      // Check if clicking on name link
+      if (p.mouseX >= nameLinkLeft && p.mouseX <= nameLinkRight &&
+          p.mouseY >= nameLinkTop && p.mouseY <= nameLinkBottom) {
         window.open('https://marlonbarrios.github.io/', '_blank');
+        return; // Exit early - don't trigger other actions
+      }
+      
+      // Check if clicking on repository link
+      if (p.mouseX >= repoLinkLeft && p.mouseX <= repoLinkRight &&
+          p.mouseY >= repoLinkTop && p.mouseY <= repoLinkBottom) {
+        window.open('https://github.com/marlonbarrios/machine_forgetting_textvoice', '_blank');
         return; // Exit early - don't trigger other actions
       }
     }
@@ -1346,6 +1393,30 @@ const sketch = p => {
 };
 
 function onReady() {
+  // Check if API key is available
+  if (!openAIKey || openAIKey.trim() === '' || openAIKey === 'your_openai_api_key_here') {
+    console.error('OpenAI API key is missing or not configured.');
+    console.error('Please create a .env file in the project root with:');
+    console.error('VITE_OPENAI_KEY=your_actual_api_key_here');
+    
+    // Show error message on page
+    const mainElt = document.querySelector('main');
+    if (mainElt) {
+      mainElt.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Georgia, serif; padding: 20px; text-align: center;">
+          <h1 style="font-size: 24px; margin-bottom: 20px;">OpenAI API Key Required</h1>
+          <p style="font-size: 16px; margin-bottom: 10px;">The OpenAI API key is missing or not configured.</p>
+          <p style="font-size: 14px; color: #666; max-width: 600px;">
+            Please create a <code>.env</code> file in the project root directory with:<br><br>
+            <code style="background: #f5f5f5; padding: 10px; display: inline-block; border-radius: 4px;">VITE_OPENAI_KEY=your_actual_api_key_here</code><br><br>
+            Then restart the development server.
+          </p>
+        </div>
+      `;
+    }
+    return;
+  }
+
   openai = new OpenAI({
     apiKey: openAIKey,
     dangerouslyAllowBrowser: true

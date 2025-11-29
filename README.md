@@ -2,6 +2,12 @@
 
 **Traces of programmed decay and the upheavals of entropy**
 
+![Drawing in Action](public/mftv2.png)
+
+[🌐 **Live App** →](https://machine-forgetting-textvoice.vercel.app/)
+
+![Machine Forgetting](public/mftv1.png)
+
 An interactive drawing application exploring the poetics of computational forgetting, autoregressive processes, and the necessity of forgetting in machine learning systems. The work embodies its own subject matter: form emerges through drawing, grows with gesture, decays as letters fade, and dissipates into nothingness. Draw with AI-generated text that fades over time, creating ephemeral traces of language and memory.
 
 Powered by OpenAI (GPT-4, TTS-1) and p5.js.
@@ -45,6 +51,8 @@ Users draw by clicking and dragging, which plays the generated text as speech wh
 - **Cross Cursor**: Cursor changes to a cross for drawing, and hides when clicking and dragging
 - **Speed-Based Playback**: Audio playback rate adjusts based on drawing speed
 
+
+
 ### Audio Experience
 - **Text-to-Speech**: Generated texts are converted to speech using OpenAI TTS-1
 - **Click and Drag Required**: Audio only plays when both clicking AND dragging—both conditions must be met
@@ -60,6 +68,8 @@ Users draw by clicking and dragging, which plays the generated text as speech wh
 - **Minimal UI**: Clean, minimal interface with icon-only buttons
 - **Status Indicators**: Bottom-center status messages show generation progress
 - **Fading Traces**: Letters fade over time, emphasizing the ephemeral nature of memory
+
+![Visual Interface](public/mfvt3.png)
 
 ### Interaction
 - **SPACEBAR**: Press to generate new text and start drawing (hides home page)
@@ -100,6 +110,31 @@ npm run dev
 
 5. Open your browser to `http://localhost:5173/`
 
+## Deployment to Vercel
+
+To deploy this application to Vercel:
+
+1. **Push your code to GitHub** (if not already done)
+
+2. **Import your project to Vercel**:
+   - Go to [vercel.com](https://vercel.com) and sign in
+   - Click "Add New Project"
+   - Import your GitHub repository
+
+3. **Configure Environment Variables**:
+   - In your Vercel project settings, go to **Settings** → **Environment Variables**
+   - Add a new environment variable:
+     - **Name**: `VITE_OPENAI_KEY`
+     - **Value**: Your OpenAI API key
+     - **Environment**: Select all (Production, Preview, Development)
+   - Click "Save"
+
+4. **Deploy**:
+   - Vercel will automatically deploy when you push to your main branch
+   - Or click "Redeploy" in the Vercel dashboard after adding the environment variable
+
+**Important**: The `.env` file is only for local development. For Vercel deployments, you must set environment variables in the Vercel dashboard.
+
 ## How to Use
 
 ### Getting Started
@@ -115,6 +150,8 @@ npm run dev
 - **Acceleration Effects**: Rapid mouse acceleration creates letter repetition and stretching, simulating time dilation
 - **Fading Letters**: Letters fade over 15 seconds, creating ephemeral traces
 - **Status Indicator**: Bottom-center shows generation status
+
+![Time Stretching Effect](public/mfvt4.png)
 
 ### Interaction Tips
 - **Generate New Text**: Press SPACEBAR to generate new text
@@ -187,6 +224,8 @@ You can customize various aspects of the installation:
 **Concept and programming by** [Marlon Barrios Solano](https://marlonbarrios.github.io/)
 
 **Powered by** OpenAI (GPT-4, TTS-1) • p5.js
+
+**Repository**: [GitHub](https://github.com/marlonbarrios/machine_forgetting_textvoice)
 
 ## License
 
