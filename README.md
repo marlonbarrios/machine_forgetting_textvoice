@@ -26,6 +26,16 @@ The live application is hosted on Vercel and ready to use. Simply visit the link
 
 The work itself embodies the processes it describes: form emerges through drawing, grows with gesture and speed, decays as letters fade over time, and dissipates into nothingness. Each trace is temporary, each mark destined to disappear, mirroring the computational forgetting it contemplates.
 
+### Voice and Text
+
+An interactive drawing application exploring the poetics of computational forgetting, autoregressive processes, and the necessity of forgetting in machine learning systems. The work embodies its own subject matter: form emerges through drawing, grows with gesture, decays as letters fade, and dissipates into nothingness. Draw with AI-generated text that fades over time, creating ephemeral traces of language and memory.
+
+**Powered by OpenAI (GPT-4, TTS-1) and p5.js.**
+
+The relationship between voice and text in this work is fundamental to its conceptual framework. The generated text—sparse, minimal, repetitive, existential—speaks of computational forgetting through its very form. When this text is converted to voice using text-to-speech, it becomes temporal, ephemeral, existing only in the moment of utterance. The synchronized drawing creates a visual trace of this spoken text, but like the voice itself, these traces fade and disappear.
+
+This dual ephemerality—of voice and visual trace—mirrors the computational forgetting the work contemplates. Just as autoregressive models lose context, forget earlier tokens, and dissipate information, the work's voice disappears into silence and its text fades into nothingness. The synchronization between voice and drawing creates a moment of presence—a fleeting alignment of sound, gesture, and mark—before both dissipate, leaving only the memory of what was once there.
+
 Users draw by clicking and dragging, which plays the generated text as speech while rendering letters that fade over time. The text drawing is synchronized with audio playback—each character appears exactly when it's spoken. The drawing speed affects both font size and audio playback rate, creating a dynamic relationship between gesture, sound, and visual trace. When the mouse accelerates, letters repeat and stretch, simulating time dilation—a visual metaphor for the stretching of computational time. Audio only plays when actively clicking and dragging; it pauses smoothly when movement stops (with fade-out to prevent audio artifacts). Letters disappear after 15 seconds, leaving only ephemeral marks of what was once there.
 
 ## Features
