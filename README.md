@@ -1,4 +1,4 @@
-# Machine Forgetting
+# Machine Forgetting (Text and voice Version)
 
 **Traces of programmed decay and the upheavals of entropy**
 
