@@ -37,6 +37,7 @@ import p5 from 'p5';
 'use strict';
 
 // API routes for OpenAI (handled server-side to avoid CORS)
+// Version: 2.0 - Using serverless functions instead of direct OpenAI calls
 const API_BASE = '/api';
 
 var x = 0;
