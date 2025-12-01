@@ -111,14 +111,17 @@ npm install
 
 3. Set your OpenAI API key:
    - Create a `.env` file in the root directory
-   - Add your OpenAI API key: `VITE_OPENAI_KEY=your_api_key_here`
+   - Add your OpenAI API key: `OPENAI_API_KEY=your_api_key_here` (or `VITE_OPENAI_KEY=your_api_key_here` for backward compatibility)
 
 4. Start the development server:
 ```bash
 npm run dev
 ```
+   This uses `vercel dev` which handles both the frontend and API routes. The server will start on `http://localhost:3000` (or another port if 3000 is busy).
+   
+   **Alternative**: If you prefer to use Vite directly (without API routes), you can run `npm run dev:vite`, but note that API calls will fail in this mode. For full functionality, use `npm run dev`.
 
-5. Open your browser to `http://localhost:5173/`
+5. Open your browser to the URL shown in the terminal (usually `http://localhost:3000`)
 
 ## Deployment to Vercel
 
@@ -134,10 +137,12 @@ To deploy this application to Vercel:
 3. **Configure Environment Variables**:
    - In your Vercel project settings, go to **Settings** → **Environment Variables**
    - Add a new environment variable:
-     - **Name**: `VITE_OPENAI_KEY`
+     - **Name**: `OPENAI_API_KEY` (or `VITE_OPENAI_KEY` for backward compatibility)
      - **Value**: Your OpenAI API key
      - **Environment**: Select all (Production, Preview, Development)
    - Click "Save"
+   
+   **Note**: The API key is now handled server-side via API routes (`/api/chat` and `/api/audio`) to avoid CORS issues. The environment variable is used by the serverless functions, not exposed to the frontend.
 
 4. **Deploy**:
    - Vercel will automatically deploy when you push to your main branch

@@ -1,5 +1,4 @@
 import './style.css';
-import OpenAI from 'openai';
 import p5 from 'p5';
 
 // P_2_3_3_01
@@ -37,8 +36,8 @@ import p5 from 'p5';
 
 'use strict';
 
-const openAIKey = import.meta.env.VITE_OPENAI_KEY;
-let openai;
+// API routes for OpenAI (handled server-side to avoid CORS)
+const API_BASE = '/api';
 
 var x = 0;
 var y = 0;
@@ -1223,13 +1222,32 @@ const sketch = p => {
       const t = translations[selectedLanguage] || translations['en'];
       const prompt = t.systemPrompt || translations['en'].systemPrompt;
       
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4",
-        temperature: 0.5,
-        messages: [{ "role": "user", "content": prompt }]
+      // Call API route instead of OpenAI directly
+      const response = await fetch(`${API_BASE}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt })
       });
 
-      const generatedText = completion.choices[0].message.content;
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { error: errorText };
+        }
+        console.error('API error:', response.status, errorData);
+        throw new Error(errorData.error || `API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (!data.text) {
+        throw new Error('Invalid response from API: missing text field');
+      }
+      const generatedText = data.text;
       // Clean the text and use it for drawing
       letters = generatedText.replace(/\n/g, ' ').trim();
       counter = 0; // Reset counter to start from beginning
@@ -1277,16 +1295,33 @@ const sketch = p => {
         audioUrl = null;
       }
       
-      // Use OpenAI TTS API to generate audio
-      const response = await openai.audio.speech.create({
-        model: "tts-1",
-        voice: "alloy", // Options: alloy, echo, fable, onyx, nova, shimmer
-        input: text,
+      // Call API route instead of OpenAI directly
+      const response = await fetch(`${API_BASE}/audio`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text, voice: 'alloy' })
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { error: errorText };
+        }
+        console.error('Audio API error:', response.status, errorData);
+        throw new Error(errorData.error || `API error: ${response.status} ${response.statusText}`);
+      }
+
       // Convert the response to a blob and store URL
-      const audioBlob = await response.arrayBuffer();
-      audioUrl = URL.createObjectURL(new Blob([audioBlob], { type: 'audio/mpeg' }));
+      const audioBlob = await response.blob();
+      if (audioBlob.size === 0) {
+        throw new Error('Received empty audio response');
+      }
+      audioUrl = URL.createObjectURL(audioBlob);
       audioReady = true; // Mark audio as ready
       textReadyIndicatorTime = Date.now(); // Update timestamp when audio is ready (for "ready" indicator)
     } catch (err) {
@@ -1393,35 +1428,8 @@ const sketch = p => {
 };
 
 function onReady() {
-  // Check if API key is available
-  if (!openAIKey || openAIKey.trim() === '' || openAIKey === 'your_openai_api_key_here') {
-    console.error('OpenAI API key is missing or not configured.');
-    console.error('Please create a .env file in the project root with:');
-    console.error('VITE_OPENAI_KEY=your_actual_api_key_here');
-    
-    // Show error message on page
-    const mainElt = document.querySelector('main');
-    if (mainElt) {
-      mainElt.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Georgia, serif; padding: 20px; text-align: center;">
-          <h1 style="font-size: 24px; margin-bottom: 20px;">OpenAI API Key Required</h1>
-          <p style="font-size: 16px; margin-bottom: 10px;">The OpenAI API key is missing or not configured.</p>
-          <p style="font-size: 14px; color: #666; max-width: 600px;">
-            Please create a <code>.env</code> file in the project root directory with:<br><br>
-            <code style="background: #f5f5f5; padding: 10px; display: inline-block; border-radius: 4px;">VITE_OPENAI_KEY=your_actual_api_key_here</code><br><br>
-            Then restart the development server.
-          </p>
-        </div>
-      `;
-    }
-    return;
-  }
-
-  openai = new OpenAI({
-    apiKey: openAIKey,
-    dangerouslyAllowBrowser: true
-  });
-
+  // API key is now handled server-side via Vercel API routes
+  // No need to check for API key in frontend
   const mainElt = document.querySelector('main');
   new p5(sketch, mainElt);
 }
