@@ -23,16 +23,18 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'OpenAI API key is not configured' });
     }
 
-    // Parse request body - handle both string and object formats
-    let body;
-    if (typeof req.body === 'string') {
+    // Parse request body - Vercel automatically parses JSON, but handle both cases
+    let body = req.body;
+    if (typeof body === 'string') {
       try {
-        body = JSON.parse(req.body);
+        body = JSON.parse(body);
       } catch (e) {
         return res.status(400).json({ error: 'Invalid JSON in request body' });
       }
-    } else {
-      body = req.body || {};
+    }
+    
+    if (!body || typeof body !== 'object') {
+      return res.status(400).json({ error: 'Request body must be a JSON object' });
     }
 
     const { prompt } = body;
